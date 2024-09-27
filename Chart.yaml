@@ -1,0 +1,15 @@
+apiVersion: v2
+name: crearistorante-game
+description: A Helm chart for Crearistorante Game
+version: 0.5.0
+dependencies:
+- name: backend
+  alias: backend
+  version: 0.1.0
+- name: frontend
+  alias: frontend
+  version: 0.1.0
+- name: mongodb
+  version: 15.6.21
+  repository: https://charts.bitnami.com/bitnami
+  condition: backend.database.type=mongodb

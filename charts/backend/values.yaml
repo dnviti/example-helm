@@ -1,0 +1,44 @@
+image:
+  repository: ghcr.io/your-username/your-repo/backend
+  tag: latest
+
+service:
+  port: 8000
+  type: ClusterIP
+
+ingress:
+  enabled: false
+  hosts:
+  - app-backend.example.com
+
+env:
+  ALWAYS_WIN: "false"
+  ALWAYS_LOSE: "false"
+
+replicaCount: 1
+
+imagePullSecrets:
+- name: github-registry
+
+imageCredentials:
+  registry: ghcr.io
+  username: your-username
+  password: your-personal-access-token
+  email: your-email@example.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+forceImageUpdate: true

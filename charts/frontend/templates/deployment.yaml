@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-frontend
+        {{- if .Values.forceImageUpdate }}
+        deploymentTime: "{{ now | unixEpoch }}"
+        {{- end }}
+    spec:
+      containers:
+      - name: frontend
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 3000
+        env:
+        - name: API_BASE_URL
+          value: {{ .Values.env.apiBaseUrl | default "http://crearistorante-game-backend:8000" | quote }}
+        {{- if .Values.resources }}
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
